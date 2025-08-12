@@ -12,6 +12,7 @@ My goal is to build real-world projects with Go and help others learn from my jo
 | ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | [Day 1](#day-1) | Variables, Conditional Statements, Functions (`init`, IIFE), Scope (package, local, block)                                    |
 | [Day 2](#day-2) | Parameters vs Arguments, First-order Functions, Higher-order Functions, Closures, Function Types, Middleware & Practical Patterns |
+| [Day 3](#day-3) | Go internal Memory |
 
 ---
 
@@ -98,6 +99,33 @@ See `day1/main.go` for the full code.
 
 **Code Samples:**  
 See `day2/` for the full code.
+</details>
+
+---
+
+<details id="day-3">
+<summary><strong>Day 3 — Internal Memory</strong></summary>
+
+Go’s memory management model is a blend of simplicity and power: it provides automatic memory allocation, garbage collection, and efficient stack and heap management.  
+To write performant Go programs, you need to understand how Go manages memory internally:  
+- When and why variables live on the **stack** or the **heap**  
+- How Go decides which memory region to use via **escape analysis**  
+- The effects of **pointers, closures, slices, and garbage collection** on memory layout  
+- How to profile and optimize memory usage using Go’s tooling
+
+### 1️⃣ Stack vs Heap — `day3/stack_vs_heap`
+
+Go organizes memory into two main regions:  
+- **Stack:** a contiguous, fast memory area used for function calls, local variables, and parameters. Each goroutine gets its own stack, which grows and shrinks dynamically. Stack allocation is cheap because it’s just pointer arithmetic, and memory is automatically freed when a function returns.  
+- **Heap:** a shared memory area for data that outlives the function call or whose lifetime cannot be determined at compile time. Heap objects are managed by Go’s garbage collector.
+
+**Why does this matter?**  
+Variables that live on the stack can be accessed quickly, but those escaping to the heap incur overhead from GC and slower allocation. Understanding when Go puts data on the heap or stack can help optimize your program’s performance.
+
+**Example:**  
+The `01_stack_vs_heap` example shows functions that return pointers to local variables (which forces heap allocation) versus functions that return values directly (allowing stack allocation). Running this example with compiler escape analysis enabled (`go build -gcflags='-m'`) reveals which variables escape.
+
+   
 </details>
 
 ---
